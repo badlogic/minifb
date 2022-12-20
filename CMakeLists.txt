@@ -86,6 +86,12 @@ set(SrcWeb
     src/web/WebMiniFB.c
 )
 
+#--
+set(SrcDOS
+    src/dos/DOSMiniFB.c
+    src/dos/vesa.c
+)
+
 # Avoid RelWithDebInfo and MinSizeRel
 #--------------------------------------
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
@@ -130,13 +136,15 @@ endif()
 if(NOT MSVC)
     # Avoid default flag values
     #--------------------------------------
-    set(CMAKE_C_FLAGS "")
-    set(CMAKE_C_FLAGS_DEBUG "" )
-    set(CMAKE_C_FLAGS_RELEASE "")
+    if (NOT DJGPP)
+        set(CMAKE_C_FLAGS "")
+        set(CMAKE_C_FLAGS_DEBUG "" )
+        set(CMAKE_C_FLAGS_RELEASE "")
 
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
+        set(CMAKE_CXX_FLAGS "")
+        set(CMAKE_CXX_FLAGS_DEBUG "")
+        set(CMAKE_CXX_FLAGS_RELEASE "")
+    endif()
 
     set(CMAKE_OBJC_FLAGS "")
     set(CMAKE_OBJC_FLAGS_DEBUG "")
@@ -243,6 +251,10 @@ elseif(UNIX)
         list(APPEND SrcLib ${SrcX11})
     endif()
 
+elseif(DJGPP)
+
+    list(APPEND SrcLib ${SrcDOS})
+
 endif()
 
 # Library
@@ -331,6 +343,10 @@ link_libraries(minifb)
 #--------------------------------------
 if(MINIFB_BUILD_EXAMPLES)
     if(NOT IOS)
+
+        add_executable(dos
+            tests/dos.c
+        )
 
         add_executable(noise
             tests/noise.c
