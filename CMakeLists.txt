@@ -393,10 +393,12 @@ if(MINIFB_BUILD_EXAMPLES)
             add_dependencies(timer web_assets)
             target_link_options(timer PRIVATE "-sEXPORT_NAME=timer")
         endif()
-    elseif(DJGPP)
+
+        if(DJGPP)
             add_executable(dos
                 tests/dos/dos.c
             )
+        endif()
     else()
 
         add_executable(noise

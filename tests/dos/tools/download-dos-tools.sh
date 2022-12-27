@@ -2,7 +2,7 @@
 set -e
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-pushd $dir > /dev/null
+pushd $dir
 
 rm -rf tools/gdb
 rm -rf tools/djgpp
@@ -30,8 +30,6 @@ else
     echo "Sorry, this template doesn't support $os"
     exit
 fi
-
-pushd tools &> /dev/null
 
 echo "Installing GDB"
 echo "$gdb_url"
@@ -63,6 +61,7 @@ rm dosbox.zip
 echo "Installing VS Code extensions"
 if [[ $(code --version) ]]; then
     code --install-extension llvm-vs-code-extensions.vscode-clangd --install-extension ms-vscode.cmake-tools --install-extension ms-vscode.cpptools --install-extension webfreak.debug
+    cp -r .vscode ../../../.vscode
 else
     echo "WARNING: could not find 'code' on path. Could not install VS Code extensions!"
     echo "         Ensure 'code' is on your PATH and re-run 'download-tools.sh' to install"
@@ -78,7 +77,5 @@ elif [[ "$os" == "darwin"* ]]; then
 elif [[ "$os" == "cygwin" ]] || [[ "$os" == "msys" ]] || [[ $(uname -r) =~ WSL ]]; then
     echo "" > /dev/null
 fi
-
-popd &> /dev/null
 
 popd &> /dev/null
