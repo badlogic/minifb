@@ -156,7 +156,12 @@ if(NOT MSVC)
 
     # Set our flags
     #--------------------------------------
-    add_compile_options("$<$<CONFIG:Debug>:-g>")
+    if (DJGPP)
+        add_compile_options("$<$<CONFIG:Debug>:-gdwarf>")
+        add_compile_options("$<$<CONFIG:Debug>:-save-temps>")
+    else()
+        add_compile_options("$<$<CONFIG:Debug>:-g>")
+    endif()
     add_compile_options("$<IF:$<CONFIG:Debug>,-O0,-O2>")
     add_compile_options(-Wall -Wextra)
     add_compile_options(-Wno-switch -Wno-unused-function -Wno-unused-parameter -Wno-implicit-fallthrough)
@@ -343,11 +348,6 @@ link_libraries(minifb)
 #--------------------------------------
 if(MINIFB_BUILD_EXAMPLES)
     if(NOT IOS)
-
-        add_executable(dos
-            tests/dos.c
-        )
-
         add_executable(noise
             tests/noise.c
         )
@@ -393,7 +393,10 @@ if(MINIFB_BUILD_EXAMPLES)
             add_dependencies(timer web_assets)
             target_link_options(timer PRIVATE "-sEXPORT_NAME=timer")
         endif()
-
+    elseif(DJGPP)
+            add_executable(dos
+                tests/dos/dos.c
+            )
     else()
 
         add_executable(noise
