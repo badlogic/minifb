@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define GDB_IMPLEMENTATION
-#include "../src/dos/gdbstub.h"
+#include "gdbstub.h"
 
 int main(void) {
   gdb_start();
